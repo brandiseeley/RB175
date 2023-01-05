@@ -106,7 +106,6 @@ post '/lists/:id/edit' do
   @list = select_list(id)
   old_name = @list[:name]
 
-  # update
   if valid_name?(new_list_name)
     @list[:name] = new_list_name
     session[:success] = "The list '#{old_name}' has been renamed to '#{new_list_name}'"
@@ -145,5 +144,14 @@ post '/lists/:list_id/todos/:todo_id/destroy' do
   @list = select_list(params[:list_id].to_i)
   @list[:todos].delete_at(params[:todo_id].to_i)
   session[:success] = "The todo has been deleted."
+  redirect "/lists/#{params[:list_id]}"
+end
+
+# toggle completion of todo item
+post '/lists/:list_id/todos/:todo_id' do
+  @list = select_list(params[:list_id].to_i)
+  @todo = @list[:todos][params[:todo_id].to_i]
+  is_completed = params[:completed] == "true"
+  @todo[:completed] = is_completed
   redirect "/lists/#{params[:list_id]}"
 end
