@@ -127,15 +127,14 @@ post '/lists/:id/destory' do
 end
 
 # add todo item to list
-post '/lists/:id/todos' do
+post '/lists/:list_id/todos' do
   puts "the todo item entered is:#{params[:todo]}"
   if valid_todo?(params[:todo])
-    list = select_list(params[:id].to_i)
-    list[:todos] << params[:todo]
+    list = select_list(params[:list_id].to_i)
+    list[:todos] << { name: params[:todo], completed: false }
     session[:success] = "The todo was added"
   else
     session[:error] = "Todo must be between 1 and 100 characters."
   end
-  p list
-  redirect "/lists/#{params[:id]}"
+  redirect "/lists/#{params[:list_id]}"
 end
