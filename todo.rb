@@ -18,6 +18,17 @@ before do
   @lists = session[:lists]
 end
 
+# VIEW HELPERS
+helpers do
+  def all_complete?(list)
+    !list[:todos].any? { |todo| todo[:completed] == false }
+  end
+
+  def empty_list?(list)
+    list[:todos].empty?
+  end
+end
+
 # returns an array of list names
 def list_names
   lists = session[:lists]
@@ -73,14 +84,14 @@ get '/lists/new' do
 end
 
 # get specific list or create new list
-get '/lists/:id' do
-  @list = select_list(params[:id].to_i)
+get '/lists/:list_id' do
+  @list = select_list(params[:list_id].to_i)
   erb :list
 end
 
 # edit an existing todo list
-get '/lists/:id/edit' do
-  @id = params[:id].to_i
+get '/lists/:list_id/edit' do
+  @id = params[:list_id].to_i
   @list = select_list(@id)
   erb :edit_list
 end
@@ -100,9 +111,9 @@ post '/lists' do
 end
 
 # Change list name
-post '/lists/:id/edit' do
+post '/lists/:list_id/edit' do
   new_list_name = params[:list_name].strip
-  id = params[:id].to_i
+  id = params[:list_id].to_i
   @list = select_list(id)
   old_name = @list[:name]
 
@@ -117,8 +128,8 @@ post '/lists/:id/edit' do
 end
 
 # delete list
-post '/lists/:id/destory' do
-  list = select_list(params[:id].to_i)
+post '/lists/:list_id/destory' do
+  list = select_list(params[:list_id].to_i)
   list_name = list[:name]
   @lists.delete(list)
   session[:success] = "'#{list_name}' has been deleted."
@@ -157,10 +168,11 @@ post '/lists/:list_id/todos/:todo_id' do
 end
 
 # mark all todos in list as complete
-post '/lists/:list_id/complete' do
+post '/lists/:list_id/complete_all' do
   @list = select_list(params[:list_id].to_i)
   @list[:todos].each do |todo|
     todo[:completed] = true
   end
+  session[:success] = "All todos have been completed."
   redirect "/lists/#{params[:list_id]}"
 end

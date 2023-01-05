@@ -4,7 +4,11 @@
 
 <ul id="lists">
   <% @lists.each do |list| %>
-    <li>
+    <% if all_complete?(list) && !empty_list?(list) %>
+      <li class="complete">
+    <% else %>
+      <li>
+    <% end %>
       <a href="/lists/<%= list[:id] %>">
         <h2><%= list[:name] %></h2>
         <p><%= list[:todos].size %></p>
