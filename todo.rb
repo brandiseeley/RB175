@@ -155,3 +155,12 @@ post '/lists/:list_id/todos/:todo_id' do
   @todo[:completed] = is_completed
   redirect "/lists/#{params[:list_id]}"
 end
+
+# mark all todos in list as complete
+post '/lists/:list_id/complete' do
+  @list = select_list(params[:list_id].to_i)
+  @list[:todos].each do |todo|
+    todo[:completed] = true
+  end
+  redirect "/lists/#{params[:list_id]}"
+end
