@@ -40,11 +40,17 @@ def error_message(name)
   'no error'
 end
 
+# generate unique id
 def generate_id
   session[:current_id] = 0 if session[:current_id].nil?
   id = session[:current_id]
   session[:current_id] += 1
   id
+end
+
+# select list based on given id
+def select_list(id)
+  @lists.select { |list| list[:id] == id }.first
 end
 
 get '/' do
@@ -53,7 +59,6 @@ end
 
 # View list of lists
 get '/lists' do
-  p @lists
   @lists = session[:lists]
   erb :lists
 end
@@ -65,14 +70,14 @@ end
 
 # get specific list or create new list
 get '/lists/:id' do
-  @list = @lists[params[:id].to_i]
+  @list = select_list(params[:id].to_i)
   erb :list
 end
 
 # edit an existing todo list
 get '/lists/:id/edit' do
   @id = params[:id].to_i
-  @list = @lists[@id]
+  @list = select_list(@id)
   erb :edit_list
 end
 
@@ -94,14 +99,14 @@ end
 post '/lists/:id/edit' do
   new_list_name = params[:list_name].strip
   @id = params[:id].to_i
-  @list = @lists[@id]
+  @list = select_list(@id)
   old_name = @list[:name]
-
+  
   # update
   if valid_name?(new_list_name)
-    session[:lists][@id][:name] = new_list_name
+    @list[:name] = new_list_name
     session[:success] = "The list '#{old_name}' has been renamed to '#{new_list_name}'"
-    redirect '/lists'
+    redirect "/lists/#{@id}"
   else
     session[:error] = error_message(new_list_name)
     erb :edit_list
