@@ -98,15 +98,15 @@ end
 # Change list name
 post '/lists/:id/edit' do
   new_list_name = params[:list_name].strip
-  @id = params[:id].to_i
-  @list = select_list(@id)
+  id = params[:id].to_i
+  @list = select_list(id)
   old_name = @list[:name]
-  
+
   # update
   if valid_name?(new_list_name)
     @list[:name] = new_list_name
     session[:success] = "The list '#{old_name}' has been renamed to '#{new_list_name}'"
-    redirect "/lists/#{@id}"
+    redirect "/lists/#{id}"
   else
     session[:error] = error_message(new_list_name)
     erb :edit_list
