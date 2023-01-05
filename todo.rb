@@ -61,7 +61,8 @@ get '/lists/:id' do
   erb :list
 end
 
-get '/list/:id/edit' do
+# edit an existing todo list
+get '/lists/:id/edit' do
   @id = params[:id].to_i
   @list = @lists[@id]
   erb :edit_list
@@ -82,12 +83,13 @@ post '/lists' do
 end
 
 # Change list name
-post '/list/:id/edit' do
+post '/lists/:id/edit' do
   new_list_name = params[:list_name].strip
   @id = params[:id].to_i
   @list = @lists[@id]
   old_name = @list[:name]
 
+  # update
   if valid_name?(new_list_name)
     session[:lists][@id][:name] = new_list_name
     session[:success] = "The list '#{old_name}' has been renamed to '#{new_list_name}'"

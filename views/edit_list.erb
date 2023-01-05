@@ -1,10 +1,10 @@
-<form action="/list/<%= @id.to_s %>/edit" method="post">
+<form action="/lists/<%= @id.to_s %>/edit" method="post">
   <dl>
     <dt>
       <label for="list_name">Enter the new name for your list:</label>
     </dt>
     <dd>
-      <input name="list_name" placeholder="List Name" type="text" value="<%= @list[:name] %>">
+      <input name="list_name" placeholder="List Name" type="text" value="<%= params[:list_name] || @list[:name] %>">
     </dd>
   </dl>
   <fieldset class="actions">
