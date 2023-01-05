@@ -1,3 +1,12 @@
+<section id="todos">
+  <header>
+    <h2>Editing '<%= @list[:name] %>'</h2>
+    <ul>
+      <li><button class="delete" href="/lists/<%= params[:id] %>/edit">Delete List</button></li>
+    </ul>
+  </header>
+</section>
+
 <form action="/lists/<%= @id.to_s %>/edit" method="post">
   <dl>
     <dt>
