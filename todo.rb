@@ -30,7 +30,7 @@ def valid_name?(name)
 end
 
 def valid_todo?(text)
-  !text.strip.empty?
+  !( text.strip.empty? || !(1..100).cover?(text.strip.length) )
 end
 
 # returns error message for invalid list name, or "no error" if name is valid
@@ -129,12 +129,13 @@ end
 # add todo item to list
 post '/lists/:list_id/todos' do
   puts "the todo item entered is:#{params[:todo]}"
+  @list = select_list(params[:list_id].to_i)
   if valid_todo?(params[:todo])
-    list = select_list(params[:list_id].to_i)
-    list[:todos] << { name: params[:todo], completed: false }
+    @list[:todos] << { name: params[:todo].strip, completed: false }
     session[:success] = "The todo was added"
+    redirect "/lists/#{params[:list_id]}"
   else
     session[:error] = "Todo must be between 1 and 100 characters."
+    erb :list
   end
-  redirect "/lists/#{params[:list_id]}"
 end
