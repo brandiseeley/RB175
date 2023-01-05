@@ -115,4 +115,9 @@ end
 
 # delete list
 post '/lists/:id/destory' do
+  list = select_list(params[:id].to_i)
+  list_name = list[:name]
+  @lists.delete(list)
+  session[:success] = "#{list_name} has been deleted."
+  redirect "/lists"
 end
