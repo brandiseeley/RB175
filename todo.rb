@@ -29,6 +29,10 @@ def valid_name?(name)
   error_message(name) == 'no error'
 end
 
+def valid_todo?(text)
+  !text.strip.empty?
+end
+
 # returns error message for invalid list name, or "no error" if name is valid
 def error_message(name)
   if !(1..100).cover?(name.length)
@@ -118,6 +122,20 @@ post '/lists/:id/destory' do
   list = select_list(params[:id].to_i)
   list_name = list[:name]
   @lists.delete(list)
-  session[:success] = "#{list_name} has been deleted."
+  session[:success] = "'#{list_name}' has been deleted."
   redirect "/lists"
+end
+
+# add todo item to list
+post '/lists/:id/todos' do
+  puts "the todo item entered is:#{params[:todo]}"
+  if valid_todo?(params[:todo])
+    list = select_list(params[:id].to_i)
+    list[:todos] << params[:todo]
+    session[:success] = "The todo was added"
+  else
+    session[:error] = "Todo must be between 1 and 100 characters."
+  end
+  p list
+  redirect "/lists/#{params[:id]}"
 end

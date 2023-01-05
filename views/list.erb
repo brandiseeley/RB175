@@ -11,19 +11,18 @@
   <a href="/lists">All Lists</a>
 <% end %>
 
-<!-- For for entering a todo item, not implemented yet
-<form action="/lists" method="post">
+<!-- For for entering a todo item, not implemented yet -->
+<form action="/lists/<%= params[:id] %>/todos" method="post">
   <dl>
     <dt>
-      <label for="list_name">Enter a new todo item:</label>
+      <label for="todo">Enter a new todo item:</label>
     </dt>
     <dd>
-      <input name="todo_text" placeholder="Todo text" type="text" value="">
+      <input name="todo" id="todo" placeholder="Something to do" type="text" value="">
     </dd>
   </dl>
   <fieldset class="actions">
-    <input type="submit" value="Save">
-    <a href="/lists">Cancel</a>
+    <input type="submit" value="Add">
   </fieldset>
 </form>
--->
+
