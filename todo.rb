@@ -139,3 +139,11 @@ post '/lists/:list_id/todos' do
     erb :list
   end
 end
+
+# delete a todo item from list
+post '/lists/:list_id/todos/:todo_id/destroy' do
+  @list = select_list(params[:list_id].to_i)
+  @list[:todos].delete_at(params[:todo_id].to_i)
+  session[:success] = "The todo has been deleted."
+  redirect "/lists/#{params[:list_id]}"
+end
