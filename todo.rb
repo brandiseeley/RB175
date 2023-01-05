@@ -40,12 +40,20 @@ def error_message(name)
   'no error'
 end
 
+def generate_id
+  session[:current_id] = 0 if session[:current_id].nil?
+  id = session[:current_id]
+  session[:current_id] += 1
+  id
+end
+
 get '/' do
   redirect '/lists'
 end
 
 # View list of lists
 get '/lists' do
+  p @lists
   @lists = session[:lists]
   erb :lists
 end
@@ -73,7 +81,7 @@ end
 post '/lists' do
   list_name = params[:list_name].strip
   if valid_name?(list_name)
-    session[:lists] << { name: list_name, todos: [] }
+    session[:lists] << { name: list_name, todos: [] , id: generate_id}
     session[:success] = 'The list has been created.'
     redirect '/lists'
   else
@@ -98,4 +106,8 @@ post '/lists/:id/edit' do
     session[:error] = error_message(new_list_name)
     erb :edit_list
   end
+end
+
+# delete list
+post '/lists/:id/destory' do
 end
