@@ -95,7 +95,11 @@ end
 
 # select list based on given id
 def select_list(id)
-  @lists.select { |list| list[:id] == id }.first
+  list = @lists.select { |list| list[:id] == id }.first
+  return list if list
+
+  session[:error] = "The specified list was not found."
+  redirect "/lists"
 end
 
 # select todo based on given id
