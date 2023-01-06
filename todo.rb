@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'sinatra'
-require 'sinatra/reloader'
+require 'sinatra/reloader' if development?
 require 'sinatra/content_for'
 require 'tilt/erubis'
 
@@ -11,6 +11,7 @@ secret = SecureRandom.hex(32)
 configure do
   enable :sessions
   set :session_secret, secret
+  set :erb, :escape_html => true
 end
 
 before do
