@@ -43,6 +43,10 @@ helpers do
   def sorted_lists(lists)
     lists.sort_by { |list| list_complete?(list) ? 1 : 0 }
   end
+
+  def sorted_todos(todos)
+    todos.sort_by { |todo| todo[:completed] ? 1 : 0 }
+  end
 end
 
 ### TODO HELPERS ###
@@ -74,16 +78,28 @@ def error_message(name)
 end
 
 # generate unique id
-def generate_id
-  session[:current_id] = 0 if session[:current_id].nil?
-  id = session[:current_id]
-  session[:current_id] += 1
+def generate_list_id
+  session[:list_id] = 0 if session[:list_id].nil?
+  id = session[:list_id]
+  session[:list_id] += 1
+  id
+end
+
+def generate_todo_id
+  session[:todo_id] = 0 if session[:todo_id].nil?
+  id = session[:todo_id]
+  session[:todo_id] += 1
   id
 end
 
 # select list based on given id
 def select_list(id)
   @lists.select { |list| list[:id] == id }.first
+end
+
+# select todo based on given id
+def select_todo(list, id)
+  list[:todos].select { |todo| todo[:id] == id }.first
 end
 
 ### GET ROUTES ###
@@ -122,7 +138,7 @@ end
 post '/lists' do
   list_name = params[:list_name].strip
   if valid_name?(list_name)
-    session[:lists] << { name: list_name, todos: [] , id: generate_id}
+    session[:lists] << { name: list_name, todos: [] , id: generate_list_id}
     session[:success] = 'The list has been created.'
     redirect '/lists'
   else
@@ -159,10 +175,9 @@ end
 
 # add todo item to list
 post '/lists/:list_id/todos' do
-  puts "the todo item entered is:#{params[:todo]}"
   @list = select_list(params[:list_id].to_i)
   if valid_todo?(params[:todo])
-    @list[:todos] << { name: params[:todo].strip, completed: false }
+    @list[:todos] << { name: params[:todo].strip, completed: false, id: generate_todo_id }
     session[:success] = "The todo was added"
     redirect "/lists/#{params[:list_id]}"
   else
@@ -174,7 +189,8 @@ end
 # delete a todo item from list
 post '/lists/:list_id/todos/:todo_id/destroy' do
   @list = select_list(params[:list_id].to_i)
-  @list[:todos].delete_at(params[:todo_id].to_i)
+  todo = select_todo(@list, params[:todo_id].to_i)
+  @list[:todos].delete(todo)
   session[:success] = "The todo has been deleted."
   redirect "/lists/#{params[:list_id]}"
 end
@@ -182,7 +198,7 @@ end
 # toggle completion of todo item
 post '/lists/:list_id/todos/:todo_id' do
   @list = select_list(params[:list_id].to_i)
-  @todo = @list[:todos][params[:todo_id].to_i]
+  @todo = select_todo(@list, params[:todo_id].to_i)
   is_completed = params[:completed] == "true"
   @todo[:completed] = is_completed
   redirect "/lists/#{params[:list_id]}"
