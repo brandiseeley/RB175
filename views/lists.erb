@@ -3,8 +3,8 @@
 <% end %>
 
 <ul id="lists">
-  <% @lists.each do |list| %>
-    <% if all_complete?(list) && !empty_list?(list) %>
+  <% sorted_lists(@lists).each do |list| %>
+    <% if list_complete?(list) %>
       <li class="complete">
     <% else %>
       <li>

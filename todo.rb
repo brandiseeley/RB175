@@ -20,8 +20,8 @@ end
 
 ### VIEW HELPERS ###
 helpers do
-  def all_complete?(list)
-    !list[:todos].any? { |todo| todo[:completed] == false }
+  def list_complete?(list)
+    !list[:todos].any? { |todo| todo[:completed] == false } && !empty_list?(list)
   end
 
   def empty_list?(list)
@@ -37,7 +37,11 @@ helpers do
   end
 
   def list_class(list)
-    "complete" if all_complete?(list) && !empty_list?(list)
+    "complete" if list_complete?(list)
+  end
+
+  def sorted_lists(lists)
+    lists.sort_by { |list| list_complete?(list) ? 1 : 0 }
   end
 end
 

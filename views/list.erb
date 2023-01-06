@@ -6,7 +6,7 @@
   <header>
     <h2><%= @list[:name] %></h2>
     <ul>
-      <% if !all_complete?(@list) %>
+      <% if !list_complete?(@list) && !empty_list?(@list) %>
         <li>
           <form action="/lists/<%= @list[:id] %>/complete_all" method="post">
             <button class="check" type="submit">Complete All</button>
