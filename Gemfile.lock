@@ -6,9 +6,12 @@ GEM
     erubis (2.7.0)
     json (2.6.3)
     multi_json (1.15.0)
+    nio4r (2.5.8)
     parallel (1.22.1)
     parser (3.2.0.0)
       ast (~> 2.4.1)
+    puma (6.0.2)
+      nio4r (~> 2.0)
     rack (1.6.13)
     rack-protection (1.5.5)
       rack
@@ -49,6 +52,7 @@ PLATFORMS
 
 DEPENDENCIES
   erubis
+  puma
   rubocop
   sinatra (~> 1.4.7)
   sinatra-contrib

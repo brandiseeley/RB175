@@ -21,7 +21,7 @@
 
   <!-- List todo items -->
   <ul>
-    <% @list[:todos].each do |todo| %>
+    <% sorted_todos(@list[:todos]).each do |todo| %>
     <!-- If item is completed, <li> tag should have class="complete" -->
       <% if todo[:completed] %>
         <li class="complete">
