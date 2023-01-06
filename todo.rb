@@ -18,7 +18,7 @@ before do
   @lists = session[:lists]
 end
 
-# VIEW HELPERS
+### VIEW HELPERS ###
 helpers do
   def all_complete?(list)
     !list[:todos].any? { |todo| todo[:completed] == false }
@@ -27,7 +27,21 @@ helpers do
   def empty_list?(list)
     list[:todos].empty?
   end
+
+  def total_incomplete_todos(list)
+    list[:todos].count { |todo| todo[:completed] == false }
+  end
+
+  def total_todos(list)
+    list[:todos].size
+  end
+
+  def list_class(list)
+    "complete" if all_complete?(list) && !empty_list?(list)
+  end
 end
+
+### TODO HELPERS ###
 
 # returns an array of list names
 def list_names
@@ -68,6 +82,8 @@ def select_list(id)
   @lists.select { |list| list[:id] == id }.first
 end
 
+### GET ROUTES ###
+
 get '/' do
   redirect '/lists'
 end
@@ -96,6 +112,7 @@ get '/lists/:list_id/edit' do
   erb :edit_list
 end
 
+### POST ROUTES ###
 
 # Create a new list
 post '/lists' do

@@ -11,7 +11,7 @@
     <% end %>
       <a href="/lists/<%= list[:id] %>">
         <h2><%= list[:name] %></h2>
-        <p><%= list[:todos].size %></p>
+        <p><%= total_incomplete_todos(list) %> / <%= total_todos(list) %></p>
       </a>
     </li>
   <% end %>
